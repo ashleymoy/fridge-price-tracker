@@ -20,9 +20,9 @@ class Fridge:
             elem.send_keys(Keys.RETURN)
             assert "No results found." not in driver.page_source # make assertion if no results
             time.sleep(3) # seconds
-            price = driver.find_element(By.ID, 'price__dollars')
+            price = driver.find_element_by_class_name("price__dollars")
             #price = driver.find_element_by_id("price__dollars") # locate current price
-            return price
+            return price.get_attribute("textContent")
         finally:
             driver.quit() # closes web browser
 
@@ -31,13 +31,14 @@ class Fridge:
             driver = webdriver.Chrome()
             driver.get("http://www.lowes.com")
             assert "Home Improvement" in driver.title  # checks website title
-            elem = driver.find_element_by_class_name("aria-describedby") # select search box on page
+            #elem = driver.find_element_by_class_name("input-group btn-left") # select search box on page
+            elem = driver.find_element_by_xpath(".//div[@class='input-group btn-left']/input")
             elem.clear()
             elem.send_keys(str(self.model)) # input model number into search box
             elem.send_keys(Keys.RETURN)
             assert "No results found." not in driver.page_source # make assertion if no results
             time.sleep(3) # seconds
-            price = driver.find_element(By.ID, 'aria-hidden')
+            price = driver.find_element_by_class_name("aria-hidden")
             return price
         finally:
             driver.quit() # close browser
