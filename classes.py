@@ -5,11 +5,11 @@ import time
 
 class Fridge:
 
-    def __init__(self, brand, model):
+    def __init__(self,brand,model):
         self.brand = brand
         self.model = model
 
-    def check_home_depot(self): # check home depot website for current price
+    def check_home_depot(self): # check home depot for current price
         try:
             driver = webdriver.Chrome()
             driver.get("http://www.homedepot.com")
@@ -18,30 +18,44 @@ class Fridge:
             elem.clear()
             elem.send_keys(str(self.model)) # input model number into search box
             elem.send_keys(Keys.RETURN)
-            assert "No results found." not in driver.page_source # make assertion if no results
-            time.sleep(3) # seconds
-            price = driver.find_element_by_class_name("price__dollars") # locate current price
+            assert "No results found." not in driver.page_source # make assertion if no result
+            time.sleep(1) # wait 1 second for page to load
+            price = driver.find_element_by_class_name("price__dollars") # locate price
             return price.get_attribute("textContent")
         finally:
             driver.quit() # close browser
     
-    def check_lowes(self): # check lowes website for current price
+    def check_lowes(self): # check lowes for current price
         try:
+            # # change user agent to not headless browser
+            # user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36'
+            # options = webdriver.ChromeOptions()
+            # options.add_argument(f'user-agent={user_agent}') # specify desired user agent
+            # driver = webdriver.Chrome(chrome_options=options)
             driver = webdriver.Chrome()
-            driver.get("http://www.lowes.com")
-            assert "Home Improvement" in driver.title  # checks website title
-            #elem = driver.find_element_by_class_name("input-group btn-left") # select search box on page
-            elem = driver.find_element_by_xpath(".//div[@class='input-group btn-left']/input")
-            elem.clear()
-            elem.send_keys(str(self.model)) # input model number into search box
-            elem.send_keys(Keys.RETURN)
-            assert "No results found." not in driver.page_source # make assertion if no results
-            time.sleep(3) # seconds
-            price = driver.find_element_by_class_name("aria-hidden")
-            return price
+            driver.get("https://www.lowes.com/search?searchTerm=" + str(self.model))
+            time.sleep(1) # wait 1 second for page to load
+            assert "No results found." not in driver.page_source # make assertion if no result 
+            price = driver.find_element_by_xpath(".//span[@class='aPrice large']/aria-hidden") # locate price with span class
+            return price.get_attribute("aria-hidden")
         finally:
             driver.quit() # close browser
 
+    def check_samsung(self):
+        if self.brand.upper() == "SAMSUNG":
+            try:
+                driver = webdriver.Chrome()
+                driver.get("https://www.samsung.com/us/search/searchMain?listType=g&searchTerm=" + str(self.model))
+                time.sleep(1) # wait 1 second for page to load
+                assert "No results found." not in driver.page_source # make assertion if no result
+                price = driver.find_element_by_xpath(".//span[@class='after epp-price']") # locate price with span class 
+                return price.get_attribute("Content")
+            finally:
+                driver.quit() # close browser
+        else:
+            pass
+
+
 if __name__ == "__main__":
     samsung = Fridge('Samsung','RF23R6201WW')
-    print(samsung.check_home_depot())
+    print(samsung.check_lowes())
