@@ -9,7 +9,7 @@ class Fridge:
         self.brand = brand
         self.model = model
 
-    def check_home_depot(self): # checks home depot website for current price
+    def check_home_depot(self): # check home depot website for current price
         try:
             driver = webdriver.Chrome()
             driver.get("http://www.homedepot.com")
@@ -23,9 +23,9 @@ class Fridge:
             price = driver.find_element_by_class_name("price__dollars") # locate current price
             return price.get_attribute("textContent")
         finally:
-            driver.quit() # close web browser
+            driver.quit() # close browser
     
-    def check_lowes(self): # checks lowes website for current price
+    def check_lowes(self): # check lowes website for current price
         try:
             driver = webdriver.Chrome()
             driver.get("http://www.lowes.com")
