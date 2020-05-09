@@ -20,12 +20,11 @@ class Fridge:
             elem.send_keys(Keys.RETURN)
             assert "No results found." not in driver.page_source # make assertion if no results
             time.sleep(3) # seconds
-            price = driver.find_element_by_class_name("price__dollars")
-            #price = driver.find_element_by_id("price__dollars") # locate current price
+            price = driver.find_element_by_class_name("price__dollars") # locate current price
             return price.get_attribute("textContent")
         finally:
-            driver.quit() # closes web browser
-
+            driver.quit() # close web browser
+    
     def check_lowes(self): # checks lowes website for current price
         try:
             driver = webdriver.Chrome()
@@ -43,5 +42,6 @@ class Fridge:
         finally:
             driver.quit() # close browser
 
-
-# home depot, best buy, lowes, brand website
+if __name__ == "__main__":
+    samsung = Fridge('Samsung','RF23R6201WW')
+    print(samsung.check_home_depot())
