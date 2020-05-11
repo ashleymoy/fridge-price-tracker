@@ -9,6 +9,7 @@ packaging==20.3
 PyJWT==1.7.1
 pylint==2.5.2
 pyparsing==2.4.7
+python-dotenv==0.13.0
 pytz==2020.1
 requests==2.23.0
 selenium==3.141.0

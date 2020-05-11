@@ -5,13 +5,17 @@ from twilio.rest import Client
 def send_sms():
     # get environment variables from .env
     load_dotenv()
+    account_sid = os.environ.get('account_sid')
+    auth_token = os.environ.get('auth_token')
     sender = os.environ.get('sender_number')
     recipient = os.environ.get('recipient_number')
 
     # create msg
-    message = Client.messages.create( 
+    client = Client(account_sid, auth_token)
+    message = client.messages.create( 
                               from_=sender,  
-                              body='This is a test.',      
+                              body='test',      
                               to=recipient 
-                          ) 
-    print(message.sid)
+                          )
+
+    return message.sid
